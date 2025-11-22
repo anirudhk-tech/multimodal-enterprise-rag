@@ -53,6 +53,23 @@ The system is architected as composed, independently testable modules:
   - Logging of evaluation metrics per query for continuous improvement  
   - Graceful handling of ambiguous or incomplete queries with fallback responses
 
+This design ensures an evaluation-first, extensible system tailored to enterprise needs and demonstrates cutting-edge multimodal retrieval-augmented generation technology with professional documentation and engineering best practices.
+
 ---
 
-This design ensures an evaluation-first, extensible system tailored to enterprise needs and demonstrates cutting-edge multimodal retrieval-augmented generation technology with professional documentation and engineering best practices.
+## Evaluation-First Pipeline Design
+
+A minimal test suite covers lookup, summarization, and semantic linkage query types, specifying expected outputs for objective correctness measurement. Tests are automated with DeepEval or similar frameworks for continuous metric tracking.
+
+Supported query types include:
+- Lookup: precise factual retrieval from ingested data.
+- Summarization: concise synthesis of multi-source information.
+- Semantic Linkages: relational retrieval spanning connected entities.
+
+Evaluation goals are clearly defined as:
+- Retrieval Quality: measuring accuracy and relevance of the results returned.
+- Hallucination Control: minimizing unsupported or fabricated information in answers.
+- Latency: ensuring timely response with low query-to-answer delay.
+
+Functional unit tests cover ingestion, transcription, entity extraction, embedding, search, graph construction, and generation modules to maintain pipeline quality and reliability at every stage.
+
