@@ -1,4 +1,9 @@
+.DS_Store
+
 /venv
 /.pytest_cache
 /.deepeval
+
 /data/processed
+/data/raw/.DS_Store
+data/.DS_Store
