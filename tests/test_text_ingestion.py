@@ -6,7 +6,7 @@ from ingestion.text_ingestion import (
     extract_text_from_pdf,
     ingest_pdf,
     ingest_txt,
-    write_record,
+    write_text_record,
 )
 
 PDF_PATH = Path(
@@ -68,7 +68,7 @@ def test_ingest_txt_with_tmp_file(tmp_path):
     assert "Fire-type" in record["text"]
 
 
-def test_write_record_creates_valid_jsonl(tmp_path, monkeypatch):
+def test_write_textrecord_creates_valid_jsonl(tmp_path, monkeypatch):
     temp_jsonl = tmp_path / "text.jsonl"
     monkeypatch.setattr("ingestion.text_ingestion.TEXT_JSONL", temp_jsonl)
 
@@ -82,7 +82,7 @@ def test_write_record_creates_valid_jsonl(tmp_path, monkeypatch):
         "tags": ["starter", "bulbasaur"],
     }
 
-    write_record(record)
+    write_text_record(record)
 
     assert temp_jsonl.exists()
     lines = temp_jsonl.read_text(encoding="utf-8").splitlines()

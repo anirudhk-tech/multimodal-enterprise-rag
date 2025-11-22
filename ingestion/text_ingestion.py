@@ -123,13 +123,13 @@ def ingest_txt(txt_path_string: str, pokemon: str, generation: int) -> dict:
     return record
 
 
-def write_record(record: dict) -> None:
+def write_text_record(record: dict) -> None:
     TEXT_JSONL.parent.mkdir(parents=True, exist_ok=True)
     with TEXT_JSONL.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False))
         f.write("\n")
 
     logger.info(
-        "write_record finished",
+        "write_text_record finished",
         extra={"id": record["id"], "path": str(TEXT_JSONL)},
     )

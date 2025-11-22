@@ -1,14 +1,14 @@
 import logging
 from pathlib import Path
 
-from ingestion.text_ingestion import ingest_pdf, ingest_txt, write_text_record
+from ingestion.image_ingestion import ingest_image, write_image_record
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
 )
 
-RAW_TEXT_DIR = Path("data/raw/text")
+RAW_IMAGE_DIR = Path("data/raw/images")
 
 POKEMON_MAPPING = {  # basic metadata (name, generation)
     "Bulbasaur": ("Bulbasaur", 1),
@@ -25,21 +25,21 @@ def resolve_metadata(path: Path) -> tuple[str, int]:
 
 
 def main() -> None:
-    for path in RAW_TEXT_DIR.iterdir():
+    if not RAW_IMAGE_DIR.exists():
+        logging.warning("Image directory %s does not exist", RAW_IMAGE_DIR)
+        return
+
+    for path in RAW_IMAGE_DIR.iterdir():
         if not path.is_file():
             continue
 
-        if path.suffix.lower() not in {".pdf", ".txt"}:
+        if path.suffix.lower() not in {".png", ".jpg"}:
             continue
 
         pokemon, generation = resolve_metadata(path)
 
-        if path.suffix.lower() == ".pdf":
-            record = ingest_pdf(str(path), pokemon=pokemon, generation=generation)
-            write_text_record(record)
-        elif path.suffix.lower() == ".txt":
-            record = ingest_txt(str(path), pokemon=pokemon, generation=generation)
-            write_text_record(record)
+        record = ingest_image(str(path), pokemon=pokemon, generation=generation)
+        write_image_record(record)
 
 
 if __name__ == "__main__":
