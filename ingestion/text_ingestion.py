@@ -49,7 +49,9 @@ def extract_text_from_pdf(pdf_path: str) -> str:
     return text
 
 
-def ingest_pdf(pdf_path_string: str, pokemon: str, generation: int) -> dict:
+def ingest_pdf(
+    pdf_path_string: str, pokemon: str, generation: int, types: list[str]
+) -> dict:
     pdf_path = Path(pdf_path_string)
     logger.info(
         "ingest_pdf started",
@@ -69,6 +71,7 @@ def ingest_pdf(pdf_path_string: str, pokemon: str, generation: int) -> dict:
         "text": text,
         "pokemon": pokemon,
         "generation": generation,
+        "types": types,
         "tags": [
             "starter",
             pokemon.lower(),
@@ -88,7 +91,9 @@ def ingest_pdf(pdf_path_string: str, pokemon: str, generation: int) -> dict:
     return record
 
 
-def ingest_txt(txt_path_string: str, pokemon: str, generation: int) -> dict:
+def ingest_txt(
+    txt_path_string: str, pokemon: str, generation: int, types: list[str]
+) -> dict:
     txt_path = Path(txt_path_string)
     logger.info(
         "ingest_txt started",
@@ -108,6 +113,7 @@ def ingest_txt(txt_path_string: str, pokemon: str, generation: int) -> dict:
         "text": text.strip(),
         "pokemon": pokemon,
         "generation": generation,
+        "types": types,
         "tags": ["starter", pokemon.lower()],
     }
 

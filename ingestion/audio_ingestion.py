@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 import whisper
 
@@ -52,7 +52,7 @@ def extract_text_from_audio(
 
     logger.info(f"Extracted text from audio: {result['text']}")
 
-    text = result["text"].strip() or ""
+    text = result["text"].strip() or ""  # type: ignore (typing of third party module giving response is wrong)
 
     if not text:
         logger.debug(
@@ -72,7 +72,7 @@ def extract_text_from_audio(
 
 
 def ingest_audio(
-    audio_path_string: str, pokemon: str, generation: int, model=None
+    audio_path_string: str, pokemon: str, generation: int, types: list[str], model=None
 ) -> Dict[str, str]:
     audio_path = Path(audio_path_string)
 
@@ -90,6 +90,7 @@ def ingest_audio(
         "text": text,
         "pokemon": pokemon,
         "generation": generation,
+        "types": types,
         "tags": ["starter", "audio", pokemon.lower()],
     }  # dataset is all starter pokemon, default tag "starter"
 

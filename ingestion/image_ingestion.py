@@ -48,7 +48,9 @@ def extract_text_from_image(image_path_string: str) -> str:
     return text
 
 
-def ingest_image(image_path_string: str, pokemon: str, generation: int):
+def ingest_image(
+    image_path_string: str, pokemon: str, generation: int, types: list[str]
+):
     image_path = Path(image_path_string)
 
     logger.info(
@@ -69,6 +71,7 @@ def ingest_image(image_path_string: str, pokemon: str, generation: int):
         "text": text,
         "pokemon": pokemon,
         "generation": generation,
+        "types": types,
         "tags": [
             "starter",
             "image",

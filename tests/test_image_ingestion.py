@@ -31,12 +31,15 @@ def test_ingest_image(tmp_path: Path):
     img_path = tmp_path / "bulbasaur_card.png"
     _create_test_image(img_path, text="Bulbasaur")
 
-    record = ingest_image(str(img_path), pokemon="Bulbasaur", generation=1)
+    record = ingest_image(
+        str(img_path), pokemon="Bulbasaur", generation=1, types=["Grass", "Poison"]
+    )
 
     assert record["id"] == img_path.stem
     assert record["modality"] == "image"
     assert record["source_path"].endswith("bulbasaur_card.png")
     assert record["pokemon"] == "Bulbasaur"
+    assert record["types"] == ["Grass", "Poison"]
     assert record["generation"] == 1
     assert "starter" in record["tags"]
     assert "image" in record["tags"]
@@ -54,6 +57,7 @@ def test_write_image_record_creates_valid_jsonl(tmp_path, monkeypatch):
         "source_path": "data/raw/text/bulbasaur.pdf",
         "text": "Bulbasaur is a Grass/Poison-type starter Pokémon.",
         "pokemon": "Bulbasaur",
+        "types": ["Grass", "Poison"],
         "generation": 1,
         "tags": ["starter", "bulbasaur"],
     }

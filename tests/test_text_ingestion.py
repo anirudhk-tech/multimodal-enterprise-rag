@@ -35,12 +35,15 @@ def test_extract_text_from_pdf_bulbasaur():
 def test_ingest_pdf_returns_expected_schema():
     assert PDF_PATH.exists(), "Bulbasaur PDF missing under data/raw/text"
 
-    record = ingest_pdf(str(PDF_PATH), pokemon="Bulbasaur", generation=1)
+    record = ingest_pdf(
+        str(PDF_PATH), pokemon="Bulbasaur", generation=1, types=["Grass", "Poison"]
+    )
 
     assert record["id"] == PDF_PATH.stem
     assert record["modality"] == "text"
     assert record["source_path"].endswith(PDF_PATH.name)
     assert record["pokemon"] == "Bulbasaur"
+    assert record["types"] == ["Grass", "Poison"]
     assert record["generation"] == 1
     assert "starter" in record["tags"]
     assert "bulbasaur" in record["tags"]
@@ -55,12 +58,15 @@ def test_ingest_txt_with_tmp_file(tmp_path):
         encoding="utf-8",
     )
 
-    record = ingest_txt(str(txt_path), pokemon="Charmander", generation=1)
+    record = ingest_txt(
+        str(txt_path), pokemon="Charmander", generation=1, types=["Fire"]
+    )
 
     assert record["id"] == "charmander"
     assert record["modality"] == "text"
     assert record["source_path"].endswith("charmander.txt")
     assert record["pokemon"] == "Charmander"
+    assert record["types"] == ["Fire"]
     assert record["generation"] == 1
     assert "starter" in record["tags"]
     assert "charmander" in record["tags"]
@@ -78,6 +84,7 @@ def test_write_textrecord_creates_valid_jsonl(tmp_path, monkeypatch):
         "source_path": "data/raw/text/bulbasaur.pdf",
         "text": "Bulbasaur is a Grass/Poison-type starter Pokémon.",
         "pokemon": "Bulbasaur",
+        "types": ["Grass", "Poison"],
         "generation": 1,
         "tags": ["starter", "bulbasaur"],
     }

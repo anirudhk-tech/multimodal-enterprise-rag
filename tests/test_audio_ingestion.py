@@ -41,13 +41,18 @@ def test_ingest_audio_builds_record(tmp_path: Path, monkeypatch):
     )
 
     record = ingest_audio(
-        str(audio_path), pokemon="Bulbasaur", generation=1, model=FakeModel()
+        str(audio_path),
+        pokemon="Bulbasaur",
+        generation=1,
+        types=["Grass", "Poison"],
+        model=FakeModel(),
     )
 
     assert record["id"] == audio_path.stem
     assert record["modality"] == "audio"
     assert record["source_path"].endswith("bulbasaur.mp3")
     assert record["pokemon"] == "Bulbasaur"
+    assert record["types"] == ["Grass", "Poison"]
     assert record["generation"] == 1
     assert "audio" in record["tags"]
     assert "starter" in record["tags"]
@@ -66,6 +71,7 @@ def test_write_audio_record_creates_valid_jsonl(tmp_path: Path, monkeypatch):
         "text": "Bulbasaur audio sample transcript.",
         "pokemon": "Bulbasaur",
         "generation": 1,
+        "types": ["Grass", "Poison"],
         "tags": ["starter", "audio", "bulbasaur"],
     }
 

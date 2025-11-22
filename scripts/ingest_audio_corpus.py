@@ -11,17 +11,17 @@ logging.basicConfig(
 
 RAW_AUDIO_DIR = Path("data/raw/audio")
 
-POKEMON_MAPPING = {  # basic metadata (name, generation)
-    "Bulbasaur": ("Bulbasaur", 1),
-    "Charmander": ("Charmander", 1),
-    "Squirtle": ("Squirtle", 1),
+POKEMON_MAPPING = {  # basic metadata (name, generation, tags)
+    "Bulbasaur": ("Bulbasaur", 1, ["grass", "poison"]),
+    "Charmander": ("Charmander", 1, ["fire"]),
+    "Squirtle": ("Squirtle", 1, ["water"]),
 }
 
 
-def resolve_metadata(path: Path) -> tuple[str, int]:
-    for key, (pokemon, gen) in POKEMON_MAPPING.items():
+def resolve_metadata(path: Path) -> tuple[str, int, list[str]]:
+    for key, (pokemon, gen, types) in POKEMON_MAPPING.items():
         if key.lower() in path.stem.lower():
-            return pokemon, gen
+            return pokemon, gen, types
     raise ValueError(f"Could not resolve metadata for {path}")
 
 
@@ -37,9 +37,11 @@ def main() -> None:
         if path.suffix.lower() not in {".mp3"}:
             continue
 
-        pokemon, generation = resolve_metadata(path)
+        pokemon, generation, types = resolve_metadata(path)
 
-        record = ingest_audio(str(path), pokemon=pokemon, generation=generation)
+        record = ingest_audio(
+            str(path), pokemon=pokemon, generation=generation, types=types
+        )
         write_audio_record(record)
 
 

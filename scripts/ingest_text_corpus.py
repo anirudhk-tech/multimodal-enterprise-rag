@@ -10,17 +10,17 @@ logging.basicConfig(
 
 RAW_TEXT_DIR = Path("data/raw/text")
 
-POKEMON_MAPPING = {  # basic metadata (name, generation)
-    "Bulbasaur": ("Bulbasaur", 1),
-    "Charmander": ("Charmander", 1),
-    "Squirtle": ("Squirtle", 1),
+POKEMON_MAPPING = {  # basic metadata (name, generation, types)
+    "Bulbasaur": ("Bulbasaur", 1, ["Grass", "Poison"]),
+    "Charmander": ("Charmander", 1, ["Fire"]),
+    "Squirtle": ("Squirtle", 1, ["Water"]),
 }
 
 
-def resolve_metadata(path: Path) -> tuple[str, int]:
-    for key, (pokemon, gen) in POKEMON_MAPPING.items():
+def resolve_metadata(path: Path) -> tuple[str, int, list[str]]:
+    for key, (pokemon, gen, types) in POKEMON_MAPPING.items():
         if key.lower() in path.stem.lower():
-            return pokemon, gen
+            return pokemon, gen, types
     raise ValueError(f"Could not resolve metadata for {path}")
 
 
@@ -32,13 +32,17 @@ def main() -> None:
         if path.suffix.lower() not in {".pdf", ".txt"}:
             continue
 
-        pokemon, generation = resolve_metadata(path)
+        pokemon, generation, types = resolve_metadata(path)
 
         if path.suffix.lower() == ".pdf":
-            record = ingest_pdf(str(path), pokemon=pokemon, generation=generation)
+            record = ingest_pdf(
+                str(path), pokemon=pokemon, generation=generation, types=types
+            )
             write_text_record(record)
         elif path.suffix.lower() == ".txt":
-            record = ingest_txt(str(path), pokemon=pokemon, generation=generation)
+            record = ingest_txt(
+                str(path), pokemon=pokemon, generation=generation, types=types
+            )
             write_text_record(record)
 
 
