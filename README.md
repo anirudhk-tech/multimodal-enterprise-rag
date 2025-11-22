@@ -1,6 +1,6 @@
 # Hybrid Multi-Modal Enterprise RAG System
 
-## Evaluation Framework & Project Goals
+## Project Goals
 
 Before building any ingestion or pipeline logic, this project defines how solution quality will be measured and what outcomes are expected:
 
