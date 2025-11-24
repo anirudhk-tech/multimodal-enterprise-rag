@@ -169,52 +169,35 @@ As the RAG pipeline grows, this suite will be extended to cover embedding, retri
 
 ## Data Ingestion and Preprocessing
 
-2. Data Ingestion and Preprocessing
-This project ingests a multimodal Pokémon corpus across text, images, and audio, normalizes it into a unified schema, and enriches every record with graph-friendly metadata.
+This project ingests a multimodal Pokémon corpus across **text, images, and audio**, normalizes it into a unified schema, and enriches every record with graph-friendly metadata.
 
-Supported modalities and formats
+### Supported modalities and formats
+- **Text:** `.pdf`, `.txt`  
+- **Images:** `.jpg`, `.jpeg`, `.png`  
+- **Audio:** `.mp3`  
+- *(Video `.mp4` is planned for future expansion.)*
 
-Text: .pdf, .txt
+### Modal-specific preprocessing pipeline
 
-Images: .jpg, .jpeg, .png
+**Text (PDF / TXT)**  
+- PDFs are parsed into raw text using a document text extractor.  
+- TXT files are read directly as UTF-8.  
+- Each record is normalized (Unicode cleanup), tagged with Pokémon metadata (`pokemon`, `generation`, `types`), and labeled as `modality="text"`.  
+- A document-level embedding is computed and stored in the vector database.
 
-Audio: .mp3
+**Images (PNG / JPG)**  
+- Images are saved under `data/raw/images`.  
+- OCR extracts any Pokémon-related text (e.g., card text, labels).  
+- Records include OCR text, metadata fields, `modality="image"`, and tags like `"image"`, `"starter"`, and the Pokémon name.  
+- OCR text is embedded and upserted into the vector database so images participate in text-based search.
 
-(Video .mp4 is left as a future extension but is already anticipated in the design.)
+**Audio (MP3)**  
+- Audio files are stored under `data/raw/audio`.  
+- A speech-to-text step produces transcripts.  
+- Each transcript is stored as `text` with matching metadata fields and tags (`"audio"`, `"starter"`, Pokémon name).  
+- Transcript text is embedded and added to the vector database.
 
-Modal-specific preprocessing pipeline
-
-Text (PDF / TXT)
-
-PDFs are parsed into raw text using a document text extractor.
-
-TXT files are read directly as UTF-8 text.
-
-Each text record is normalized (Unicode cleanup), tagged with Pokémon metadata (pokemon, generation, types), and labeled as modality="text".
-
-A document-level embedding is computed and stored in the vector database for semantic search.
-
-Images (PNG / JPG)
-
-Uploaded images are saved under data/raw/images.
-
-OCR is run over each image to extract any Pokémon-related text (e.g., card text, labels).
-
-The resulting record includes text (OCR output), pokemon, generation, types, modality="image", plus tags like "image", "starter", and the lowercase Pokémon name.
-
-The OCR text is embedded and upserted into the vector database so images can participate in text-based search.
-
-Audio (MP3)
-
-Audio files are stored under data/raw/audio.
-
-A speech-to-text step produces transcripts for each clip.
-
-The transcript is stored in text, with metadata fields mirroring other modalities (pokemon, generation, types, modality="audio", tags such as "audio", "starter", and the Pokémon name).
-
-Transcript text is embedded and added to the vector database, enabling semantic search over spoken content.
-
-Unified schema and metadata enrichment
+### Unified schema and metadata enrichment
 
 Across all modalities, the ingestion layer produces a consistent JSON record shape, for example:
 
@@ -229,7 +212,3 @@ Across all modalities, the ingestion layer produces a consistent JSON record sha
   "generation": 1,
   "tags": ["starter", "bulbasaur", "gen1"]
 }
-```
-All records share common fields (id, modality, source_path, text, pokemon, types, generation, tags), making them easy to feed into both the knowledge graph builder and the vector database.
-
-Domain-specific tags ("starter", Pokémon name, generation, element types) are added at ingest time so downstream components (graph construction, filters, hybrid search) can reason about the domain without re-deriving these attributes.
