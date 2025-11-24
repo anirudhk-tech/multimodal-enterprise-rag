@@ -1,7 +1,7 @@
 # Hybrid Multi-Modal Enterprise RAG System
 
 ## Demo
-- ![Demo](https://www.loom.com/share/a0107a9ab16443319343a034956b001f)
+- [Demo](https://www.loom.com/share/a0107a9ab16443319343a034956b001f)
 
 ## Quick Links
 
