@@ -111,4 +111,14 @@ Current coverage includes:
 
 - **Single text file add (PDF/TXT)**: `test_add_text_pdf_moves_file_and_ingests` and `test_add_text_txt_uses_ingest_txt` redirect `RAW_TEXT_DIR`, fake `ingest_pdf` / `ingest_txt` and `write_text_record`, feed in synthetic Squirtle PDF and Bulbasaur TXT files, and assert that each is copied under data/raw/text/ and routed to the correct ingestion function with the right Pokémon metadata.
 
+- **Chat API**:  
+  `test_chat_endpoint_uses_openai_and_returns_content` monkeypatches the `openai_client` inside the chat routes so that `responses.create` returns a deterministic fake answer. It then posts to `/chat` with a sample question and asserts that the status is 200, the JSON contains a `content` field equal to that fake answer, and that the fake client was invoked with the expected user message — confirming correct wiring without calling the real OpenAI API.
+
+- **Graph API**:  
+  `test_graph_endpoint_404_when_missing` overrides `GRAPH_JSON` to point to a non-existent temp file and asserts that `GET /graph` returns a 404 with `"Graph not built yet"`.  
+  `test_graph_endpoint_returns_graph_json` then points `GRAPH_JSON` at a temp file containing a minimal graph payload and verifies that `GET /graph` returns 200 with the expected `pokemon_nodes` and `type_nodes`, demonstrating both the error and success paths of the endpoint.
+
+- **Logs API**:  
+  `test_logs_endpoint_returns_parsed_records` monkeypatches `LOG_PATH` to a temp `eval.jsonl` containing a single JSONL entry, calls `GET /logs`, and asserts that the response is a list of parsed objects whose first item includes the correct `query` and nested `focused_pokemon.name` — verifying that the endpoint parses JSONL into structured records rather than returning raw text.
+
 As the RAG pipeline grows, this suite will be extended to cover embedding, retrieval, graph construction, and answer‑generation helpers so that tests evolve alongside new capabilities.
