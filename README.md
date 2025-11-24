@@ -260,3 +260,142 @@ Every `/chat` request writes a structured evaluation log entry capturing:
 - The focused Pokémon node, if one was resolved from the query  
 
 A Logs dialog in the top bar (next to Upload) lets users inspect recent queries. Each log entry shows the question, answer, focused Pokémon, and expandable sections for context and evaluation fields. This makes it easy to debug retrieval behavior, verify grounding, and demonstrate the evaluation-first design of the system during the demo.
+
+## How to Run
+1. Prerequisites
+- Python 3.9+
+- Node.js + pnpm / npm / yarn
+- An OpenAI API key (OPENAI_API_KEY)
+- A Qdrant Cloud cluster URL and API key
+
+2. Backend setup
+From the `server/` directory, create and activate a virtual environment and install dependencies:
+
+```bash
+cd server
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+```
+
+Create a .env file in server/ with at least:
+
+```text
+OPENAI_API_KEY=your_openai_key
+
+QDRANT_URL=https://YOUR-CLUSTER-ID.region.aws.cloud.qdrant.io
+QDRANT_API_KEY=your_qdrant_api_key
+QDRANT_COLLECTION=pokemon_corpus
+```
+
+(Optional) Run the backend test suite:
+```bash
+pytest
+```
+
+3. Initialize the Qdrant collection
+Create the pokemon_corpus collection once in Qdrant Cloud (via the Qdrant UI or HTTP):
+
+Collection name: pokemon_corpus
+
+Vector size: 1536
+
+Distance: Cosine
+
+After this, the backend will upsert points into this collection automatically during ingestion.
+
+4. Run the ingestion and graph build pipelines
+From `server/`:
+
+```bash
+cd server
+python -m scripts.ingest    # ingest and preprocess the multimodal corpus
+python -m scripts.process   # build the Pokémon knowledge graph (graph.json + CSVs)
+```
+
+- `scripts.ingest`
+
+Ingests PDFs, text files, images, and audio into normalized JSONL records.
+
+Extracts entities and relationships and writes intermediate structured data.
+
+Computes embeddings and upserts vectors + payloads into Qdrant.
+
+- `scripts.process`
+
+Reads the structured JSONL corpus.
+
+Builds the Pokémon knowledge graph (nodes + edges).
+
+Exports graph.json and CSVs consumed by the /graph API and UI.
+
+You should re‑run scripts.ingest (and then scripts.process) whenever you add new raw data under `data/raw/....`
+
+5. Run the backend API
+Start the FastAPI app:
+
+```bash
+uvicorn api.main:app --reload --port 8000
+```
+
+Key routes:
+
+- `GET /health` – health check
+
+- `POST /ingest` – manually trigger ingestion (thin wrapper over scripts.ingest)
+
+- `POST /process` – rebuild the graph (wrapper over scripts.process)
+
+- `GET /graph` – serve graph.json for the UI graph view
+
+- `POST /chat` – hybrid RAG chat over the knowledge graph + Qdrant vectors
+
+- `GET /logs` – return evaluation logs for each chat query
+
+6. Run the frontend
+From the web/ (Next.js) directory:
+
+```bash
+cd web
+pnpm install        # or npm install / yarn
+pnpm dev            # or npm run dev / yarn dev
+```
+
+By default the frontend expects the API at http://localhost:8000 (configurable via an env or config file such as API_BASE). Open the UI at http://localhost:3000.
+
+
+7. Using the demo
+Upload new files
+
+Use the Upload button in the top bar to add .pdf, .txt, .png/.jpg, or .mp3 files.
+
+The backend routes them through the same ingestion + embedding pipeline.
+
+After uploading new data, re‑run python -m scripts.process or hit POST /process so the knowledge graph reflects the updated corpus.
+
+## Ask questions
+
+Use the chat panel on the left to ask natural language questions about the starter Pokémon domain.
+
+Each query calls `/chat`, which combines knowledge‑graph context with vector search results from Qdrant to generate an answer.
+
+## Explore the graph
+
+The right panel shows the Pokémon knowledge graph built from the extracted entities and relationships.
+
+The graph is currently rendered as an explorable visualization; the API also returns a “focused Pokémon” node per query, which is available for future UI enhancements, but the current UI does not auto‑highlight that node yet.
+
+## Inspect evaluation logs
+
+Use the Logs button in the top bar to open the evaluation log viewer.
+
+Each log entry shows the query, answer, focused Pokémon, and the stored context/evaluation fields, which is useful for understanding and debugging retrieval behavior.
+
+8. Optional: run evaluation tests
+To run the evaluation‑focused tests (including the DeepEval‑backed check on /chat):
+
+```bash
+cd server
+pytest tests/test_deepeval.py
+```
+This exercises the hybrid RAG pipeline on a small set of Pokémon questions and asserts answer relevance against a gold snippet.
