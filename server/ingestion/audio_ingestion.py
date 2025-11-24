@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Dict
 
-import whisper  # type: ignore (local IDE quirk fix, safe to ignore)
+import whisper
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ def extract_text_from_audio(
         )
         raise
 
-    text = result["text"].strip() or ""  # type: ignore (typing of third party module giving response is wrong)
+    text = result["text"].strip() or ""
 
     if not text:
         logger.debug(

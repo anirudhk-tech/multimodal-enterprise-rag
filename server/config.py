@@ -6,5 +6,5 @@ from openai import OpenAI
 load_dotenv()
 
 openai_client = OpenAI(
-    api_key=os.environ["OPENAI_KEY"],
+    api_key=os.environ["OPENAI_API_KEY"],
 )

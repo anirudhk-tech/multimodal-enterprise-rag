@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import (  # type: ignore (local editor interpreter issue)
+from fastapi import (
     APIRouter,
     HTTPException,
 )

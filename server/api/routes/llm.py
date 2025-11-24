@@ -2,7 +2,7 @@ import logging
 
 from config import openai_client
 from eval_logging.eval_logger import log_evaluation
-from fastapi import APIRouter, Form  # type: ignore (safe to ignore, local editor quirk)
+from fastapi import APIRouter, Form
 from processing.graph_store import build_graph_context
 
 logger = logging.getLogger(__name__)

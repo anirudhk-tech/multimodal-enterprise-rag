@@ -1,9 +1,9 @@
 import logging
 
-from fastapi import (  # type: ignore (local editor interpreter issue)
+from fastapi import (
     FastAPI,
 )
-from fastapi.middleware.cors import (  # type: ignore (local editor interpreter issue)
+from fastapi.middleware.cors import (
     CORSMiddleware,
 )
 

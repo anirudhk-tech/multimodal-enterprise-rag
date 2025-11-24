@@ -58,7 +58,7 @@ def extract_entities(text: str, media_id: str, pokemon_hint: Union[str, None] = 
         ),
     )
 
-    data = json.loads(response.output[0].content[0].text)  # type: ignore OpenAI enforces JSON schema, never null
+    data = json.loads(response.output[0].content[0].text)
 
     for key in [
         "pokemon_nodes",

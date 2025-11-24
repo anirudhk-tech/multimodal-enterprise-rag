@@ -2,7 +2,7 @@ import json
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException  # type: ignore
+from fastapi import APIRouter, HTTPException
 
 logger = logging.getLogger(__name__)
 

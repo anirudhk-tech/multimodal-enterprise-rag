@@ -8,7 +8,7 @@ from ingestion.image_ingestion import (
     ingest_image,
     write_image_record,
 )
-from PIL import Image, ImageDraw  # type: ignore (local editor quirk, safe to ignore)
+from PIL import Image, ImageDraw
 
 
 def _create_test_image(path: Path, text: str = "Bulbasaur") -> None:

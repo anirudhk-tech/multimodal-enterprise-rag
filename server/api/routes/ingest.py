@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from fastapi import (  # type: ignore (local editor interpreter issue)
+from fastapi import (
     APIRouter,
     File,
     HTTPException,
