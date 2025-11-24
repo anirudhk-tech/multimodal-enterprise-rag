@@ -380,6 +380,7 @@ Use the Logs button in the top bar to open the evaluation log viewer.
 Each log entry shows the query, answer, focused Pokémon, and the stored context/evaluation fields, which is useful for understanding and debugging retrieval behavior.
 
 8. Optional: run evaluation tests
+
 To run the evaluation‑focused tests (including the DeepEval‑backed check on /chat):
 
 ```bash
