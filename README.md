@@ -212,6 +212,7 @@ Across all modalities, the ingestion layer produces a consistent JSON record sha
   "generation": 1,
   "tags": ["starter", "bulbasaur", "gen1"]
 }
+```
 
 ## Entity & Relationship Extraction and Hybrid Indexing
 
