@@ -233,3 +233,28 @@ The graph builder exports this schema to CSV and `graph.json`, which are then se
 
 **Parallel vector index construction**  
 In parallel with graph construction, the ingestion pipeline builds a vector index over all textual signals in the corpus (PDF text, OCR output, audio transcripts). Each record’s text is embedded into a dense vector and stored together with its metadata (`pokemon`, `modality`, `tags`) in the vector store. This yields a hybrid retrieval layer: graph lookups provide explicit entity–relation structure, while vector search provides semantic similarity over the raw multimodal content, and both are combined at query time to ground the LLM’s answers.
+
+## User Interface / Demo
+
+The project ships with a web UI that exposes the full multimodal RAG pipeline end-to-end.
+
+**Uploading new files**  
+The top bar includes an Upload dialog that accepts `.pdf`, `.txt`, `.png`, `.jpg`, and `.mp3` files. On upload, the file is sent to the backend, routed to the appropriate ingestion path (text, image, or audio), and fed through the same preprocessing, entity extraction, graph building, and vector indexing pipeline used for the initial corpus. After ingestion completes, the UI triggers a graph refresh so new entities and relationships become immediately explorable.
+
+**Natural language querying**  
+A chat-style panel on the left allows users to type free-form questions about the starter Pokémon domain. Each query calls the `/chat` endpoint, which combines:
+- Knowledge graph context (focused Pokémon node + neighbors)  
+- Vector search results from the multimodal corpus (PDF text, OCR’d images, audio transcripts)  
+
+The model’s answer is streamed back into the chat history, alternating user and assistant turns in a familiar messaging layout.
+
+**Graph-aware answer exploration**  
+The right side of the UI renders an interactive knowledge graph built from the extracted entities and relationships. When the chatbot focuses on a particular Pokémon, that node is highlighted in the graph so users can see its types, evolutions, and related entities. Users can visually explore the graph to understand how different Pokémon, types, and documents connect behind each answer.
+
+**Evaluation logging and logs viewer**  
+Every `/chat` request writes a structured evaluation log entry capturing:
+- Query text, model answer, and the graph/vector context used  
+- Basic evaluation metadata (e.g., whether the answer was grounded in the graph, latency placeholder)  
+- The focused Pokémon node, if one was resolved from the query  
+
+A Logs dialog in the top bar (next to Upload) lets users inspect recent queries. Each log entry shows the question, answer, focused Pokémon, and expandable sections for context and evaluation fields. This makes it easy to debug retrieval behavior, verify grounding, and demonstrate the evaluation-first design of the system during the demo.
