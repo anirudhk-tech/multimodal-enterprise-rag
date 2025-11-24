@@ -7,7 +7,7 @@ from fastapi.middleware.cors import (  # type: ignore (local editor interpreter 
     CORSMiddleware,
 )
 
-from api.routes import ingest, llm, process
+from api.routes import graph, ingest, llm, process
 
 origins = [
     "http://localhost:3000",
@@ -33,6 +33,7 @@ app.add_middleware(
 app.include_router(ingest.router)
 app.include_router(process.router)
 app.include_router(llm.router)
+app.include_router(graph.router)
 
 
 @app.get("/health")

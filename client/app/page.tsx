@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { GraphView } from "@/components/GraphView";
 
 export default function HomePage() {
   const API_BASE = "http://localhost:8000";
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isGraphUpdating, setIsGraphUpdating] = useState<boolean>(false);
+  const [updateGraphVisual, setUpdateGraphVisual] = useState<boolean>(false);
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState<string>("");
   const [focusedNode, setFocusedNode] = useState<string | null>(null);
@@ -40,6 +42,7 @@ export default function HomePage() {
       console.error(error);
     } finally {
       setIsGraphUpdating(false);
+      setUpdateGraphVisual((prev) => !prev);
     }
   };
 
@@ -296,18 +299,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="mt-1 h-full rounded-2xl border border-dashed border-slate-700 bg-slate-900/80">
-                <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-700 bg-slate-950">
-                    <div className="h-6 w-6 rounded-full border border-slate-600">
-                      <div className="m-[9px] h-1 w-1 rounded-full bg-emerald-400" />
-                    </div>
-                  </div>
-                  <p className="text-sm text-slate-400">
-                    Focused node: {focusedNode ?? "None"}
-                  </p>
-                </div>
-              </div>
+              <GraphView updateGraphVisual={updateGraphVisual} />
             </div>
           </section>
         </main>
