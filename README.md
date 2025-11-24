@@ -1,7 +1,7 @@
 # Hybrid Multi-Modal Enterprise RAG System
 
 ## Demo
-- [![Watch the demo](https://i.sstatic.net/Vp2cE.png)](https://youtu.be/vt5fpE0bzSY)
+- [![Watch the demo](https://www.loom.com/share/a0107a9ab16443319343a034956b001f)]
 
 ## Quick Links
 
