@@ -15,7 +15,7 @@ def test_health():
 def test_ingest_endpoint_smoke(monkeypatch):
     calls = {"ingest": False, "process": False}
 
-    from api import main as api_main
+    from api.routes import ingest as api_main
 
     def fake_ingest():
         calls["ingest"] = True
@@ -31,7 +31,7 @@ def test_ingest_endpoint_smoke(monkeypatch):
 def test_process_endpoint_smoke(monkeypatch):
     calls = {"process": False}
 
-    from api import main as api_main
+    from api.routes import process as api_main
 
     def fake_process():
         calls["process"] = True

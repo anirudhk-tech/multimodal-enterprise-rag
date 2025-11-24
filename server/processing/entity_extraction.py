@@ -1,9 +1,9 @@
 import json
 import logging
-import pprint
-from typing import Any, Dict, Union, cast
+from typing import Any, Union, cast
 
 from config import openai_client
+
 from processing.graph_schema import JSON_GRAPH_SCHEMA
 
 logger = logging.getLogger(__name__)

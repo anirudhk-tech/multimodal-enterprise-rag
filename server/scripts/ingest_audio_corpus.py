@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from typing import Dict
 
+from data.pokemon_mappings import POKEMON_MAPPING
 from ingestion.audio_ingestion import ingest_audio, write_audio_record
 
 logger = logging.getLogger(__name__)
@@ -11,12 +12,6 @@ logging.basicConfig(
 )
 
 RAW_AUDIO_DIR = Path("data/raw/audio")
-
-POKEMON_MAPPING = {  # basic metadata (name, generation, tags)
-    "Bulbasaur": ("Bulbasaur", 1, ["grass", "poison"]),
-    "Charmander": ("Charmander", 1, ["fire"]),
-    "Squirtle": ("Squirtle", 1, ["water"]),
-}
 
 
 def resolve_metadata(path: Path) -> tuple[str, int, list[str]]:

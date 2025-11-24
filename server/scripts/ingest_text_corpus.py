@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from typing import Dict
 
+from data.pokemon_mappings import POKEMON_MAPPING
 from ingestion.text_ingestion import ingest_pdf, ingest_txt, write_text_record
 
 logging.basicConfig(
@@ -10,12 +11,6 @@ logging.basicConfig(
 )
 
 RAW_TEXT_DIR = Path("data/raw/text")
-
-POKEMON_MAPPING = {  # basic metadata (name, generation, types)
-    "Bulbasaur": ("Bulbasaur", 1, ["Grass", "Poison"]),
-    "Charmander": ("Charmander", 1, ["Fire"]),
-    "Squirtle": ("Squirtle", 1, ["Water"]),
-}
 
 
 def resolve_metadata(path: Path) -> tuple[str, int, list[str]]:
