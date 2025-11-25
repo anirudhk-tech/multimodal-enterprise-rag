@@ -86,7 +86,7 @@ Evaluation goals are:
 
 ### Tests
 This project uses `pytest` for unit tests, with an initial focus on validating the text, image, and audio ingestion pipelines for Pokémon starter content. [web:195][web:201]  
-Tests live under the `tests/` directory and exercise the core ingestion functions in `ingestion.text_ingestion`, `ingestion.image_ingestion`, and `ingestion.audio_ingestion`. 
+Tests live under the `tests/` directory and exercise the core backend functions. 
 
 Current coverage includes:
 
