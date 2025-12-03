@@ -35,7 +35,7 @@ async def chat(message: str = Form(...)):
             {"role": "system", "content": system_msg},
             {"role": "user", "content": user_content},
         ],
-        temperature=0.7,
+        temperature=0.1,
         max_output_tokens=100,
     )
 

@@ -57,22 +57,6 @@ def find_related_pokemon(graph: Dict[str, Any], pokemon_name: str) -> Dict[str, 
     }
 
 
-def find_pokemon_name_in_question(
-    graph: Dict[str, Any], question: str
-) -> Optional[str]:
-    q = question.lower()
-    tokens = {t for t in re.split(r"[^a-z0-9]+", q) if t}
-
-    for p in graph.get("pokemon_nodes", []):
-        name = p["name"]
-        name_token = name.lower().replace(" ", "")
-
-        if name.lower() in tokens or name_token in tokens:
-            return name
-
-    return None
-
-
 def find_pokemon_nodes_by_name(
     graph: Dict[str, Any], query: str
 ) -> List[Dict[str, Any]]:
@@ -95,12 +79,12 @@ def build_graph_context(question: str) -> Dict[str, Any]:
     graph = load_graph()
     if not graph["pokemon_nodes"]:
         logger.warning("No Pokémon data found in graph.json")
-        return ""
+        return {"content": "", "node": None}
 
     candidates = find_pokemon_nodes_by_name(graph, question)
     if not candidates:
         logger.warning(f"No Pokémon found for question: {question}")
-        return ""
+        return {"content": "", "node": None}
 
     primary = candidates[0]
     neighborhood = find_related_pokemon(graph, primary["name"])

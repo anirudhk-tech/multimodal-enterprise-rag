@@ -1,5 +1,4 @@
 import os
-import uuid
 from typing import Any, Dict, List, Optional
 
 from config import get_qdrant_client
